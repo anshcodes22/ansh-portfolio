@@ -1,0 +1,53 @@
+* {
+	box-sizing: border-box;
+}
+
+.container {
+	max-width: 600px;
+	padding: 2rem;
+	font-family: 'Courier New', Courier, monospace;
+	margin: 0 auto;
+	color: #202020;
+}
+
+@media (min-width: 1024px) {
+	.container {
+		max-width: 800px;
+	}
+}
+
+@media (min-width: 1280px) {
+	.container {
+		margin-left: 15%;
+	}
+}
+
+ol[type=a-paren] {
+	counter-reset: list;
+	list-style: none;
+}
+
+ol[type=a-paren] > li {
+	counter-increment: list;
+}
+
+ol[type=a-paren] > li::marker {
+	content: "(" counter(list, lower-alpha) ") ";
+}
+
+li {
+	margin: 1rem 0;
+}
+
+header {
+	border-bottom: 1px solid #202020;
+	padding-bottom: 1em;
+}
+
+header > h1 {
+	margin: 0 0 1rem 0;
+}
+
+header > div.spdx-id {
+	margin-bottom: 0.25rem;
+}

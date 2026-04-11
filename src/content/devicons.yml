@@ -1,0 +1,129 @@
+# This collection is a mapping of devicon IDs to metadata used when
+# displaying them, such as a full name for what the icon represents and a
+# URL for more information about the technology
+
+---
+github:
+    name: GitHub
+    url: https://github.com
+
+rust:
+    name: Rust
+    url: https://rust-lang.org
+
+c:
+    name: C (programming language)
+    url: https://en.wikipedia.org/wiki/C_(programming_language)
+
+wasm:
+    name: WebAssembly (WASM)
+    url: https://webassembly.org
+
+codecov:
+    name: CodeCov
+    url: https://codecov.io
+
+githubactions:
+    name: GitHub Actions
+    url: https://docs.github.com/en/actions
+
+linux:
+    name: Linux
+    url: https://kernel.org
+    replaceWith: local:tux
+
+nginx:
+    name: Nginx
+    url: https://nginx.org
+
+bash:
+    name: Bourne-Again Shell (Bash)
+    url: https://en.wikipedia.org/wiki/Bash_(Unix_shell)
+
+debian:
+    name: Debian Linux
+    url: https://debian.org
+
+ansible:
+    name: Ansible
+    url: https://ansible.com
+
+prometheus:
+    name: Prometheus
+    url: https://prometheus.io
+
+grafana:
+    name: Grafana
+    url: https://grafana.com/grafana/
+
+traefikproxy:
+    name: Traefik
+    url: https://traefik.io
+
+docker:
+    name: Docker
+    url: https://docker.com
+
+python:
+    name: Python
+    url: https://python.org
+
+html5:
+    name: HTML
+
+css3:
+    name: CSS
+
+javascript:
+    name: JavaScript
+
+php:
+    name: PHP
+    url: https://www.php.net
+
+chartjs:
+    name: Chart.js
+    url: https://www.chartjs.org
+
+raspberrypi:
+    name: Raspberry Pi
+    url: https://raspberrypi.com
+
+mongodb:
+    name: MongoDB
+    url: https://www.mongodb.com
+
+express:
+    name: Express.js
+    url: https://expressjs.com
+
+react:
+    name: React
+    url: https://react.dev
+
+nodejs:
+    name: Node.js
+    url: https://nodejs.org
+
+tailwindcss:
+    name: Tailwind CSS
+    url: https://tailwindcss.com
+
+vite:
+    name: Vite
+    url: https://vitejs.dev
+
+threejs:
+    name: Three.js
+    url: https://threejs.org
+nextjs:
+    name: Next.js
+    url: https://nextjs.org
+
+typescript:
+    name: TypeScript
+    url: https://www.typescriptlang.org
+
+vuejs:
+    name: Vue.js
+    url: https://vuejs.org

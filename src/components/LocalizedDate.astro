@@ -1,0 +1,38 @@
+---
+import { getFormatterForStyle, type Style } from "@/lib/localizedDates";
+
+export interface Props {
+    style?: Style;
+    date: Date;
+    utc?: boolean;
+}
+
+// Don't change the default style without checking all uses first!
+const { date, style = "locale-long", utc = false } = Astro.props;
+
+const formatter = getFormatterForStyle(style, utc ? "UTC" : undefined);
+---
+
+<localized-date
+    class="inline"
+    data-style={style}
+    data-date={date.getTime()}
+    data-utc={utc}>{formatter.format(date)}</localized-date
+><script>
+    import { getFormatterForStyle, type Style } from "@/lib/localizedDates";
+
+    class LocalizedDateElement extends HTMLElement {
+        connectedCallback() {
+            const date = new Date(parseInt(this.dataset.date!));
+            const style = this.dataset.style! as Style;
+            const utc = this.dataset.utc === "true";
+            const formatter = getFormatterForStyle(
+                style,
+                utc ? "UTC" : undefined,
+            );
+            this.textContent = formatter.format(date);
+        }
+    }
+
+    window.customElements.define("localized-date", LocalizedDateElement);
+</script>

@@ -1,0 +1,33 @@
+---
+export interface Props {
+    headings: [string, string | null][];
+    headingStyle: string;
+}
+
+const { headings, headingStyle } = Astro.props;
+---
+
+<nav class="bg-accent text-background mt-2 px-8 py-2 sm:px-16 sm:py-2 lg:mt-0">
+    <div
+        class="mx-auto flex w-full max-w-screen-xl flex-col gap-x-16 gap-y-4 sm:flex-row sm:flex-wrap sm:justify-between"
+    >
+        {
+            headings.map(([name, href]) => {
+                return (
+                    <a
+                        href={href}
+                        aria-disabled={href === null}
+                        class:list={[
+                            headingStyle.replace("mb-4", ""),
+                            "decoration-green-900 text-shadow-2xs text-shadow-green-900",
+                            href === null && "cursor-not-allowed opacity-60",
+                        ]}
+                        data-highlight
+                    >
+                        {name}
+                    </a>
+                );
+            })
+        }
+    </div>
+</nav>

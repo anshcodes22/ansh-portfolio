@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push: {}
+  pull_request: {}
+  workflow_dispatch: {}
+  # Build daily so commit graph gets updated
+  schedule:
+    - cron: '40 23 * * *'
+
+env:
+  BASE_URL: ${{ vars.BASE_URL }}
+
+jobs:
+  prettier:
+    name: Check formatting
+    if: ${{ github.event_name != 'schedule' }} # Skip job if running scheduled build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v6
+
+      - name: Set up project
+        uses: ./.github/actions/setup-project
+
+      - name: Run Prettier
+        run: bun run check::fmt
+
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-id: ${{ steps.upload-build.outputs.artifact-id }}
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v6
+
+      - name: Set up project
+        uses: ./.github/actions/setup-project
+        with:
+          dev: false
+
+      - name: Build site
+        run: bun run build
+        env:
+          GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
+
+      - name: Compile NGINX redirects
+        run: bun run redirect-compiler ./dist > dist/.nginx.conf
+
+      - name: Upload built site as artifact
+        id: upload-build
+        uses: actions/upload-artifact@v6
+        with:
+          name: site
+          path: dist
+          if-no-files-found: error
+          include-hidden-files: true
+
+  deploy:
+    name: Deploy site
+    needs: build
+    if: ${{ github.ref == 'refs/heads/master' }}
+    concurrency:
+      group: ${{ github.workflow }}-deploy
+      cancel-in-progress: true
+    environment:
+      name: kasad.com
+      url: https://kasad.com
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built site artifact
+        uses: actions/download-artifact@v7
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact-id }}
+          path: dist
+
+      - name: Print contents of built site
+        if: ${{ runner.debug }}
+        run: ls -lAhR dist
+
+      - name: Deploy site
+        run: |
+          set -x
+          eval $(ssh-agent)
+          printenv SSH_PRIVATE_KEY | ssh-add -
+          known_hosts_file="$(mktemp)"
+          printenv SSH_HOST_KEYS > "$known_hosts_file"
+          export RSYNC_RSH="ssh -o UserKnownHostsFile='$known_hosts_file' -o StrictHostKeyChecking=yes -o UpdateHostKeys=no"
+          rsync --delete --chmod=D0750,F0640 --chown=:www -rv dist/ "${SSH_HOST}":/
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST_KEYS: ${{ secrets.SSH_HOST_KEYS }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}

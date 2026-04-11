@@ -1,0 +1,192 @@
+---
+import { Icon } from "astro-icon/components";
+
+export interface Props {
+    headingStyle: string;
+}
+
+const { headingStyle } = Astro.props;
+
+const email = "puri.ansh05@gmail.com";
+const phone = "+91 93154 62403";
+const linkedin = "https://linkedin.com/in/ansh-puri-d20229";
+const github = "https://github.com/anshcodes22";
+---
+
+<section id="contact" class="mx-auto my-8 max-w-screen-lg px-8 text-lg">
+    <h1 class={headingStyle}>export default Contact...</h1>
+    <p class="mb-8 text-stone-500">
+        I'm always open to new opportunities, collaborations, or just a
+        conversation. Feel free to reach out!
+    </p>
+
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-start">
+        {/* Left: Contact info */}
+        <div class="flex flex-col gap-4 lg:w-72 lg:flex-none">
+            <div
+                class="border-secondary/30 bg-background rounded-xl border p-6 shadow-sm"
+            >
+                <p class="mb-4 font-bold text-base">Contact Info</p>
+
+                <div class="flex flex-col gap-4">
+                    <a
+                        href={`mailto:${email}`}
+                        class="hover:text-accent group flex flex-row items-center gap-3 text-base transition-colors"
+                    >
+                        <Icon
+                            name="fa7-solid:envelope"
+                            class="text-accent size-5 flex-none"
+                        />
+                        <span class="break-all text-stone-600 group-hover:text-stone-900 text-sm">
+                            {email}
+                        </span>
+                    </a>
+
+                    <a
+                        href={`tel:+919315462403`}
+                        class="hover:text-accent group flex flex-row items-center gap-3 text-base transition-colors"
+                    >
+                        <Icon
+                            name="fa7-solid:phone"
+                            class="text-accent size-5 flex-none"
+                        />
+                        <span class="text-stone-600 group-hover:text-stone-900 text-sm">
+                            {phone}
+                        </span>
+                    </a>
+
+                    <a
+                        href={linkedin}
+                        target="_blank"
+                        class="hover:text-accent group flex flex-row items-center gap-3 text-base transition-colors"
+                    >
+                        <Icon
+                            name="devicon:linkedin"
+                            class="size-5 flex-none"
+                        />
+                        <span class="text-stone-600 group-hover:text-stone-900 text-sm">
+                            LinkedIn
+                        </span>
+                    </a>
+
+                    <a
+                        href={github}
+                        target="_blank"
+                        class="hover:text-accent group flex flex-row items-center gap-3 text-base transition-colors"
+                    >
+                        <Icon
+                            name="devicon:github"
+                            class="size-5 flex-none"
+                        />
+                        <span class="text-stone-600 group-hover:text-stone-900 text-sm">
+                            GitHub
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {/* Right: Contact form */}
+        <div class="flex-1">
+            <div
+                class="border-secondary/30 bg-background rounded-xl border p-6 shadow-sm"
+            >
+                <p class="mb-4 font-bold text-base">Send a message</p>
+                <form
+                    id="contact-form"
+                    class="flex flex-col gap-4"
+                >
+                    <div class="flex flex-col gap-1">
+                        <label
+                            for="contact-name"
+                            class="text-sm font-medium text-stone-600"
+                        >
+                            Name
+                        </label>
+                        <input
+                            id="contact-name"
+                            name="name"
+                            type="text"
+                            required
+                            placeholder="Your name"
+                            class="border-secondary/40 bg-stone-50 focus:border-accent rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-stone-400"
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label
+                            for="contact-email"
+                            class="text-sm font-medium text-stone-600"
+                        >
+                            Email
+                        </label>
+                        <input
+                            id="contact-email"
+                            name="email"
+                            type="email"
+                            required
+                            placeholder="your@email.com"
+                            class="border-secondary/40 bg-stone-50 focus:border-accent rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-stone-400"
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label
+                            for="contact-message"
+                            class="text-sm font-medium text-stone-600"
+                        >
+                            Message
+                        </label>
+                        <textarea
+                            id="contact-message"
+                            name="message"
+                            required
+                            rows={5}
+                            placeholder="What's on your mind?"
+                            class="border-secondary/40 bg-stone-50 focus:border-accent resize-none rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-stone-400"
+                        ></textarea>
+                    </div>
+
+                    <button
+                        id="contact-submit"
+                        type="submit"
+                        class="bg-accent hover:bg-accent/80 flex flex-row items-center justify-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold text-white transition-colors"
+                    >
+                        <Icon name="fa7-solid:paper-plane" class="size-4" />
+                        Send Message
+                    </button>
+
+                    <p id="contact-status" class="hidden text-center text-sm text-stone-500"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const form = document.getElementById("contact-form") as HTMLFormElement;
+    const status = document.getElementById("contact-status") as HTMLParagraphElement;
+    const submitBtn = document.getElementById("contact-submit") as HTMLButtonElement;
+
+    form?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = (document.getElementById("contact-name") as HTMLInputElement).value;
+        const email = (document.getElementById("contact-email") as HTMLInputElement).value;
+        const message = (document.getElementById("contact-message") as HTMLTextAreaElement).value;
+
+        const subject = encodeURIComponent(`Portfolio message from ${name}`);
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+        const mailtoLink = `mailto:puri.ansh05@gmail.com?subject=${subject}&body=${body}`;
+
+        window.location.href = mailtoLink;
+
+        status.textContent = "Opening your mail client...";
+        status.classList.remove("hidden");
+        submitBtn.disabled = true;
+
+        setTimeout(() => {
+            status.classList.add("hidden");
+            submitBtn.disabled = false;
+        }, 3000);
+    });
+</script>

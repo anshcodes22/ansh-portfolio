@@ -1,0 +1,36 @@
+---
+import { Icon } from "astro-icon/components";
+
+export interface Props {
+    headingStyle: string;
+}
+
+const { headingStyle } = Astro.props;
+---
+
+<section class="mt-4 flex-initial text-2xl lg:mt-0 lg:max-w-xl">
+    <h1 id="about-me" class:list={[headingStyle, "mb-4 scroll-mt-16"]}>
+        export default About ME...
+    </h1>
+    <div class="flex w-full flex-col items-stretch gap-6 leading-[1.15]">
+        <div class="flex flex-row items-center gap-8">
+            <div class="text-college-gold flex-auto font-bold">
+                <abbr
+                    title="Information Technology"
+                    class="cursor-default no-underline decoration-dotted hover:underline"
+                    >IT</abbr
+                >
+                <span class="font-default-sans">@</span>
+                GGSIPU
+            </div>
+            <div
+                class="text-secondary flex-initial text-right text-lg font-medium"
+            >
+                2023&ndash;2027
+            </div>
+        </div>
+        <div class="font-bold">
+            I’m Ansh, an engineering student at Guru Tegh Bahadur Institute of Technology with a strong focus on web development. I enjoy tackling mathematically complex and algorithmically challenging problems, turning intricate concepts into efficient, real-world solutions. Curious and driven, I’m constantly exploring new technologies and approaches to create clean, impactful digital experiences.
+        </div>
+    </div>
+</section>

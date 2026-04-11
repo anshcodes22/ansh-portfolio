@@ -1,0 +1,77 @@
+---
+import "@/styles/global.css";
+import "@fontsource-variable/raleway";
+
+export interface Props {
+    extraBodyClasses?: string;
+}
+
+const { extraBodyClasses = "" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <link rel="icon" href="/assets/laptoppfp2-offwhite-circle-small.png" />
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+        <slot name="head" />
+    </head>
+    <body
+        class:list={[
+            "bg-background text-primary selection:bg-accent/40 lining-nums",
+            extraBodyClasses,
+        ]}
+    >
+        <slot />
+
+        <script>
+            // When a link targeting an element on the page is clicked, highlight
+            // the page element temporarily
+
+            // Wait for 1 second before modifying elements
+            await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+
+            const links = document.querySelectorAll(
+                "a[href]",
+            ) satisfies NodeListOf<HTMLAnchorElement>;
+            links.forEach((link) => {
+                const href = link.getAttribute("href");
+                if (!href?.startsWith("#")) return;
+                const id = href.split("#")[1];
+                const target = id ? document.getElementById(id) : undefined;
+                if (!target) {
+                    throw new Error(
+                        `target not found for nav link with href="${href}"`,
+                    );
+                }
+                let originalBackground = target.classList
+                    .values()
+                    .find((value) => value.startsWith("bg-"));
+                if (!originalBackground) {
+                    originalBackground = "bg-transparent";
+                    target.classList.add(originalBackground);
+                }
+                ["transition-colors", "duration-1000"].forEach((clazz) => {
+                    if (!target.classList.contains(clazz)) {
+                        target.classList.add(clazz);
+                    }
+                });
+                link.addEventListener("click", () => {
+                    target?.classList.replace(
+                        originalBackground,
+                        "bg-highlight",
+                    );
+                    setTimeout(() => {
+                        target?.classList.replace(
+                            "bg-highlight",
+                            originalBackground,
+                        );
+                    }, 1500);
+                });
+            });
+        </script>
+    </body>
+</html>

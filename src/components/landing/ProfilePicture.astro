@@ -1,0 +1,27 @@
+---
+import { Picture } from "astro:assets";
+import profilePic from "@/images/c42ba6e0-3c67-47ec-83d8-e416b565ca24.jpg";
+
+const borderClasses = {
+    thin: "border-2",
+    thick: "border-8",
+};
+
+export interface Props {
+    border?: keyof typeof borderClasses;
+}
+
+const border = borderClasses[Astro.props.border ?? "thick"];
+---
+
+<div
+    class={`aspect-square size-full flex-none overflow-hidden rounded-full ${border} border-accent shadow-lg`}
+>
+    {/* Placeholder until profile picture is ready */}
+    <Picture
+        src={profilePic}
+        title="Profile picture"
+        alt="Profile picture"
+        class="h-full w-full object-cover object-center"
+    />
+</div>

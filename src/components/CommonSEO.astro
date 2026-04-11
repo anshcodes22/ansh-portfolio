@@ -1,0 +1,58 @@
+---
+import { SEO, type SEOProps } from "astro-seo";
+
+export interface Props {
+    title: string;
+    titleTemplate?: string;
+    description: string;
+    cardTitle?: string;
+    article?: { pubDate?: Date };
+    extend?: SEOProps["extend"];
+}
+
+let {
+    title,
+    titleTemplate = "Ansh's Portfolio",
+    description,
+    cardTitle,
+    article,
+} = Astro.props;
+title = title + " | " + titleTemplate;
+---
+
+<SEO
+    {title}
+    {description}
+    openGraph={{
+        basic: {
+            title: cardTitle ?? title,
+            type: article !== undefined ? "article" : "website",
+            image: new URL(
+                "/assets/laptoppfp2-offwhite-cropped-small.png",
+                Astro.url,
+            ).href,
+        },
+        image: {
+            url: new URL(
+                "/assets/laptoppfp2-offwhite-cropped-small.png",
+                Astro.url,
+            ).href,
+            height: 600,
+            width: 600,
+            type: "image/png",
+            alt: "Profile picture of a cartoon frog typing on a laptop",
+        },
+        optional: { description },
+        article: {
+            publishedTime: article?.pubDate?.toISOString(),
+        },
+    }}
+    twitter={{
+        title: cardTitle ?? title,
+        image: new URL(
+            "/assets/laptoppfp2-offwhite-cropped-small.png",
+            Astro.url,
+        ).href,
+        imageAlt: "Profile picture of a cartoon frog typing on a laptop",
+    }}
+/>

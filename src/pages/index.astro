@@ -1,0 +1,97 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactIcons from "@/components/landing/ContactIcons.astro";
+import ProfilePicture from "@/components/landing/ProfilePicture.astro";
+import Affiliations from "@/components/landing/Affiliations.astro";
+import GitHubContributions from "@/components/landing/GitHubContributions.astro";
+import ProjectsSection from "@/components/landing/ProjectsSection.astro";
+import NavLinks from "@/components/landing/NavLinks.astro";
+import Footer from "@/components/Footer.astro";
+import Header from "@/components/Header.astro";
+import CommonSEO from "@/components/CommonSEO.astro";
+import ToolsSection from "@/components/landing/ToolsSection.astro";
+import ContactSection from "@/components/landing/ContactSection.astro";
+import Divider from "@/components/landing/Divider.astro";
+
+const headingStyle =
+    "decoration-accent mb-4 text-3xl font-black underline decoration-4";
+
+const navLinks: [string, string | null][] = [
+    ["About me", "#about-me"],
+    ["Projects", "#projects"],
+    ["Tools", "#tools"],
+    ["Contact", "#contact"],
+];
+---
+
+<BaseLayout>
+    <CommonSEO
+        slot="head"
+        title="Portfolio"
+        cardTitle="Ansh"
+        description="Ansh Puri's portfolio — projects, tools, and contact."
+    />
+
+    {/* Container for first screenful of content */}
+    <div class="flex min-h-[100dvh] flex-col justify-between">
+        <div class="flex flex-col flex-grow">
+            <Header />
+
+            {
+                /* Nameplate & about me section */
+                /* Stacks vertically when screen is small; side-by-side when screen is large */
+            }
+            <div
+                class="mx-auto mt-2 w-full px-8 md:px-16 lg:flex lg:flex-row lg:items-center lg:justify-center lg:gap-16 flex-grow"
+            >
+                <header class="flex-initial">
+                    <div class="text-xl font-bold">Hi, I'm</div>
+                    <div
+                        class="flex flex-row items-center justify-between gap-2 sm:gap-8 md:gap-16 xl:justify-start"
+                    >
+                        <!-- Left: Name plate & links -->
+                        <div class="flex-2 drop-shadow-lg">
+                            <div
+                                class="mb-4 text-6xl font-black tracking-tight sm:text-8xl"
+                            >
+                                Ansh<span
+                                    class="text-accent font-default-sans">.</span
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Right: profile picture -->
+                        <div class="box-content max-w-56 min-w-30 flex-1">
+                            <ProfilePicture />
+                        </div>
+                    </div>
+                    <div class="mt-8 flex flex-row justify-between drop-shadow-sm">
+                        <ContactIcons />
+                    </div>
+                </header>
+
+                {/* About me */}
+                <Affiliations {headingStyle} />
+            </div>
+
+            {/* GitHub contributions */}
+            <section class="mt-auto flex-none pb-4 lg:pb-0">
+                <GitHubContributions />
+            </section>
+        </div>
+
+        {/* Heading links */}
+        <div class="flex-none">
+            <NavLinks headings={navLinks} {headingStyle} />
+        </div>
+    </div>
+
+    <ProjectsSection {headingStyle} />
+    <Divider />
+
+    <ToolsSection {headingStyle} />
+    <ContactSection {headingStyle} />
+
+    <Divider />
+    <Footer class="mt-24" /></BaseLayout
+>

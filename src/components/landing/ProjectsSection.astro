@@ -1,0 +1,45 @@
+---
+import ProjectCard from "./ProjectCard.astro";
+
+import { getCollection } from "astro:content";
+
+export interface Props {
+    headingStyle: string;
+}
+
+const { headingStyle } = Astro.props;
+
+const projects = await getCollection("projects");
+// Sort projects by the explicitly defined 'order' field
+projects.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+---
+
+<section class="flex flex-col items-stretch lg:h-screen">
+    <div id="projects" class="flex-none p-8">
+        <a href="#projects"><h1 class={headingStyle}>export default Projects...</h1></a>
+        <p class="text-lg">A selection of my more notable projects.</p>
+    </div>
+
+    <div
+        class="gutter inset-shadow-sm-even-tb flex flex-1 flex-col flex-nowrap items-center pt-0 lg:flex-row lg:items-end lg:gap-8 lg:overflow-x-auto lg:p-8"
+    >
+        {projects.map((project) => <ProjectCard {project} />)}
+    </div>
+</section>
+
+<style>
+    .gutter {
+        --color-stripe: color-mix(
+            in oklab,
+            var(--color-stone-300) 25%,
+            transparent
+        );
+        background: repeating-linear-gradient(
+            -45deg,
+            var(--color-background),
+            var(--color-background) 2rem,
+            var(--color-stripe) 2rem,
+            var(--color-stripe) 4rem
+        );
+    }
+</style>

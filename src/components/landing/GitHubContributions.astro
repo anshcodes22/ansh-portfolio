@@ -1,0 +1,155 @@
+---
+import { SKIP_REMOTE } from "astro:env/server";
+import {
+    getGitHubContributionWeeks,
+    type ContributionInfo,
+} from "@/lib/githubContributions";
+import LocalizedDate from "@/components/LocalizedDate.astro";
+
+function getTileColorClass(contributionCount: number) {
+    return contributionCount >= 20
+        ? "c4"
+        : contributionCount >= 10
+          ? "c3"
+          : contributionCount >= 5
+            ? "c2"
+            : contributionCount >= 1
+              ? "c1"
+              : "c0";
+}
+
+const contributionInfo: ContributionInfo = SKIP_REMOTE
+    ? { totalContributions: 0, weeks: [] }
+    : await getGitHubContributionWeeks("anshcodes22");
+const firstDay = contributionInfo.weeks[0]?.find((day) => day !== null);
+const lastDay = contributionInfo.weeks.at(-1)?.findLast((day) => day !== null);
+---
+
+<github-calendar
+    id="github-calendar"
+    class="block bg-transparent py-2"
+    data-start-date={firstDay?.date.getTime()}
+    style="display:block;"
+>
+    <div
+        class="text-secondary flex h-8 flex-row items-end pl-8 font-mono text-lg"
+    >
+        {contributionInfo.totalContributions.toLocaleString()} commits total
+    </div>
+    <div
+        class="flex w-full flex-row-reverse overflow-x-auto py-1 [scrollbar-color:var(--color-stone-300)_transparent] hover:[scrollbar-color:var(--color-stone-400)_transparent]"
+    >
+        <div class="flex w-fit flex-row gap-4 px-6">
+            {
+                firstDay && (
+                    <div class="text-secondary rotate-180 text-center font-mono text-lg [writing-mode:vertical-rl]">
+                        <LocalizedDate utc date={firstDay.date} />
+                    </div>
+                )
+            }
+            <div class="gh-column-parent flex flex-row gap-1">
+                {
+                    contributionInfo.weeks.map((week) => (
+                        <div>
+                            {week.map((day) =>
+                                day ? (
+                                    <div
+                                        class={getTileColorClass(
+                                            day.contributionCount,
+                                        )}
+                                        data-c={day.contributionCount}
+                                    />
+                                ) : (
+                                    <div class="empty-tile size-6" />
+                                ),
+                            )}
+                        </div>
+                    ))
+                }
+            </div>
+            {
+                lastDay && (
+                    <div class="text-secondary text-center font-mono text-lg [writing-mode:vertical-rl]">
+                        <LocalizedDate date={lastDay.date} utc />
+                    </div>
+                )
+            }
+        </div>
+    </div>
+</github-calendar>
+
+{
+    /*
+    Populate the title attribute of each tile with a tooltip string on the client.
+    Doing it on the client saves a lot of unnecessary bytes in the HTML, and won't
+    ruin the look of the page if JavaScript is disabled.
+    */
+}
+<script>
+    import { getFormatterForStyle } from "@/lib/localizedDates";
+    const formatter = getFormatterForStyle("Monday, Jan 1, 2020", "UTC");
+    class GitHubCalendarElement extends HTMLElement {
+        connectedCallback() {
+            const tiles = this.querySelectorAll(
+                "div[data-c]",
+            ) as NodeListOf<HTMLDivElement>;
+            let startDateStr = this.dataset.startDate;
+            if (startDateStr === undefined) {
+                throw new Error("github-calendar start-date is undefined");
+            }
+            const startDate = new Date(parseInt(startDateStr));
+            const currentDate = startDate;
+            const DAY_AS_MS = 86_400_000; // 1000 ms/s * 60 s/min * 60 min/hr * 24 hr/day
+            for (const tile of tiles) {
+                const commits = tile.dataset.c ?? "??";
+                tile.title = `${commits} commit${commits === "1" ? "" : "s"} on ${formatter.format(currentDate)}`;
+                currentDate.setTime(currentDate.getTime() + DAY_AS_MS);
+            }
+        }
+    }
+    window.customElements.define("github-calendar", GitHubCalendarElement);
+</script>
+
+{
+    /*
+Styles for this component are made global for size optimization of the resulting HTML.
+If we use Tailwind classes, each tile <div> becomes large because of the long class attribute.
+If we use component-scoped styles, it's much better (saves ~200 kB), but Astro
+still adds the data attribute to every element in the component for style scoping.
+By making the styles global, we remove the need for a long data attribute on every element in this component,
+thus resulting in ~270 kB of savings.
+*/
+}
+<style is:global>
+    @reference "@/styles/global.css";
+
+    /* Calendar columns */
+    .gh-column-parent > div {
+        @apply flex flex-col gap-1;
+    }
+
+    /* Non-empty calendar tiles */
+    .gh-column-parent > div > :not(.empty-tile) {
+        @apply size-6 rounded-md border shadow-sm transition-transform ease-out hover:scale-125 hover:border-2;
+    }
+
+    .gh-column-parent .c4 {
+        @apply border-green-900 bg-green-800;
+    }
+
+    .gh-column-parent .c3 {
+        @apply border-green-700 bg-green-700/80;
+    }
+
+    .gh-column-parent .c2 {
+        @apply border-green-600/30 bg-green-600/50;
+    }
+
+    .gh-column-parent .c1 {
+        @apply border-green-600/20 bg-green-500/30;
+    }
+
+    .gh-column-parent .c0 {
+        @apply border-stone-300 bg-stone-300/80;
+    }
+</style>

@@ -1,0 +1,24 @@
+---
+import ContentLayout from "@/layouts/ContentLayout.astro";
+import { Icon } from "astro-icon/components";
+---
+
+<ContentLayout title="404 | kasad.com">
+    <main class="sm:p-8 md:p-16 lg:p-24">
+        <h1 class="text-8xl font-black">
+            <Icon
+                name="fa7-solid:warning"
+                class="align-center inline"
+                desc="Warning icon"
+            />
+            <span class="decoration-accent underline decoration-8"
+                >404&nbsp;– Not found</span
+            >
+        </h1>
+        <div id="text-container" class="text-xl [&>p]:mt-16">
+            <p class="text-error font-mono">
+                Error: The page you requested does not exist.
+            </p>
+        </div>
+    </main>
+</ContentLayout>

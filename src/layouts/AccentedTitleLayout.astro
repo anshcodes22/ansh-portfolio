@@ -1,0 +1,40 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+
+import { type Props as BaseLayoutProps } from "./BaseLayout.astro";
+
+export interface Props extends BaseLayoutProps {}
+
+const { ...baseLayoutProps } = Astro.props;
+---
+
+<BaseLayout {...baseLayoutProps}>
+    <slot slot="head" name="head" />
+
+    <div class="flex min-h-screen w-full flex-col">
+        {/* Title section */}
+        <div
+            class="bg-accent text-background w-full shadow-lg text-shadow-green-900"
+        >
+            <Header />
+
+            <div
+                class="mx-auto max-w-screen-xl p-8 pt-4 font-medium sm:text-lg lg:p-16 lg:pt-8"
+            >
+                <slot name="title" />
+            </div>
+        </div>
+
+        {/* Main content */}
+        <div class="grow">
+            <slot />
+        </div>
+
+        {/* Footer */}
+        <div>
+            <Footer />
+        </div>
+    </div>
+</BaseLayout>

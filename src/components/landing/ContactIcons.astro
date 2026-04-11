@@ -1,0 +1,46 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface ContactIconEntry {
+    url: string;
+    icon: string;
+    alt: string;
+    title: string;
+}
+
+const entries: ContactIconEntry[] = [
+    {
+        url: "mailto:puri.ansh05@gmail.com",
+        icon: "fa7-solid:envelope",
+        alt: "Email",
+        title: "Send Ansh an email",
+    },
+    {
+        url: "https://linkedin.com/in/ansh-puri-d20229",
+        icon: "devicon:linkedin",
+        alt: "LinkedIn",
+        title: "LinkedIn profile",
+    },
+    {
+        url: "https://github.com/anshcodes22",
+        icon: "devicon:github",
+        alt: "GitHub",
+        title: "GitHub profile",
+    },
+];
+---
+
+<div class="flex flex-row items-center gap-3">
+    {
+        entries.map((entry) => (
+            <a
+                href={entry.url}
+                title={entry.title}
+                target="_blank"
+                class="size-8 transition-opacity duration-200 hover:opacity-80"
+            >
+                <Icon name={entry.icon} desc={entry.alt} class="size-8" />
+            </a>
+        ))
+    }
+</div>

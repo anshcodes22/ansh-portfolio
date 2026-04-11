@@ -1,0 +1,146 @@
+---
+import { Icon } from "astro-icon/components";
+
+type NavItem = { path: string; name: string; external?: boolean };
+const navItems: NavItem[] = [
+    { name: "Home", path: "/" },
+    { name: "Resume", path: "/resume.pdf", external: true },
+];
+
+const boldNavItemPath = navItems
+    .map(({ path }) => path)
+    .filter((path) => Astro.url.pathname.startsWith(path))
+    .toSorted((a, b) => b.length - a.length)[0];
+---
+
+<header class="w-full">
+    <div
+        class="mx-auto box-content flex h-4 max-w-screen-xl flex-row items-center justify-between p-4"
+    >
+        {/* Left block */}
+        <a href="/" class="font-bold"> Ansh </a>
+
+        {/* Navigation menu */}
+        <nav class="text-base font-medium">
+            {/* Non-hamburger menu */}
+            <menu class="flex flex-row gap-6 max-sm:hidden">
+                {
+                    navItems.map(({ path, name, external }) => (
+                        <li>
+                            <a
+                                href={path}
+                                target={external ? "_blank" : undefined}
+                                rel={external ? "noopener noreferrer" : undefined}
+                                class:list={[
+                                    "decoration-accent decoration-2 hover:underline",
+                                    path === boldNavItemPath &&
+                                        "font-bold underline",
+                                    external && "text-accent font-semibold",
+                                ]}
+                            >
+                                {name}
+                            </a>
+                        </li>
+                    ))
+                }
+            </menu>
+
+            {/* Hamburger menu */}
+            <button
+                type="button"
+                popovertarget="nav-dialog"
+                popovertargetaction="show"
+                aria-label="Open navigation menu"
+                class="cursor-pointer sm:hidden"
+            >
+                <Icon class="inline" name="fa7-solid:bars" />
+            </button>
+            <dialog
+                id="nav-dialog"
+                popover
+                class="bg-background fixed start-auto end-auto top-0 right-0 bottom-0 h-full w-70 p-4"
+            >
+                <div class="flex flex-row justify-between">
+                    <a href="/" class="font-bold"> Ansh </a>
+                    <button
+                        type="button"
+                        popovertarget="nav-dialog"
+                        popovertargetaction="hide"
+                        aria-label="Close navigation menu"
+                        class="cursor-pointer"
+                    >
+                        <Icon class="inline" name="fa7-solid:close" />
+                    </button>
+                </div>
+                <menu class="mt-8 flex flex-col gap-2 text-lg">
+                    {
+                        navItems.map(({ path, name, external }) => (
+                            <li
+                                class:list={[
+                                    "list-inside",
+                                    path == boldNavItemPath
+                                        ? "marker:text-accent list-disc font-bold"
+                                        : "list-[circle]",
+                                ]}
+                            >
+                                <a
+                                    href={path}
+                                    target={external ? "_blank" : undefined}
+                                    rel={external ? "noopener noreferrer" : undefined}
+                                    class:list={[
+                                        "decoration-accent decoration-2 hover:underline",
+                                        path === boldNavItemPath && "underline",
+                                        external && "text-accent font-semibold",
+                                    ]}
+                                >
+                                    {name}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </menu>
+            </dialog>
+        </nav>
+    </div>
+</header>
+
+<style is:global>
+    #nav-dialog {
+        & {
+            transform: translateX(100%);
+            transition:
+                transform 250ms ease,
+                display 250ms allow-discrete,
+                overlay 250ms allow-discrete;
+        }
+
+        &:popover-open {
+            transform: translateX(0);
+        }
+
+        &::backdrop {
+            background-color: var(--color-primary);
+            opacity: 0;
+            transition:
+                opacity 250ms,
+                display 250ms allow-discrete,
+                overlay 250ms allow-discrete;
+        }
+
+        &:popover-open::backdrop {
+            opacity: 0.5;
+        }
+    }
+
+    @starting-style {
+        #nav-dialog {
+            &:popover-open {
+                transform: translateX(100%);
+            }
+
+            &:popover-open::backdrop {
+                opacity: 0;
+            }
+        }
+    }
+</style>

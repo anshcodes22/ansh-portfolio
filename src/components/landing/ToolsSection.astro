@@ -1,0 +1,71 @@
+---
+export interface Props {
+    headingStyle: string;
+}
+
+const { headingStyle } = Astro.props;
+
+const tools = [
+    {
+        name: "VS Code",
+        description: "My primary code editor for web development projects.",
+        url: "https://code.visualstudio.com",
+        icon: "devicon:vscode",
+    },
+    {
+        name: "Figma",
+        description: "Design tool I use for wireframing and UI prototyping.",
+        url: "https://figma.com",
+        icon: "devicon:figma",
+    },
+    {
+        name: "GitHub",
+        description: "Where all my projects live and version control happens.",
+        url: "https://github.com",
+        icon: "devicon:github",
+    },
+    {
+        name: "Vercel",
+        description: "Deployment platform for most of my web applications.",
+        url: "https://vercel.com",
+        icon: "devicon:vercel",
+    },
+    {
+        name: "Docker",
+        description: "Containerization for consistent development environments.",
+        url: "https://docker.com",
+        icon: "devicon:docker",
+    },
+    {
+        name: "Linux",
+        description: "My daily driver OS for development.",
+        url: "https://kernel.org",
+        icon: "devicon:linux",
+    },
+];
+---
+
+<section id="tools" class="mx-auto my-8 max-w-screen-md p-8 text-lg">
+    <h1 class={headingStyle}>export default Tools...</h1>
+    <p class="mb-6 text-stone-500">
+        A selection of tools and technologies I use regularly in my workflow.
+    </p>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {
+            tools.map((tool) => (
+                <a
+                    href={tool.url}
+                    target="_blank"
+                    class="border-secondary/30 bg-background hover:border-accent group flex flex-row items-start gap-4 rounded-xl border p-4 shadow-sm transition-all hover:shadow-md"
+                >
+                    <div class="flex-auto">
+                        <p class="group-hover:text-accent font-bold transition-colors">
+                            {tool.name}
+                        </p>
+                        <p class="text-sm text-stone-500">{tool.description}</p>
+                    </div>
+                </a>
+            ))
+        }
+    </div>
+</section>
