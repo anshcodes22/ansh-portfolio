@@ -1,9 +1,5 @@
 ---
-import { SKIP_REMOTE } from "astro:env/server";
-import {
-    getGitHubContributionWeeks,
-    type ContributionInfo,
-} from "@/lib/githubContributions";
+import { getEntry } from "astro:content";
 import LocalizedDate from "@/components/LocalizedDate.astro";
 
 function getTileColorClass(contributionCount: number) {
@@ -18,11 +14,23 @@ function getTileColorClass(contributionCount: number) {
               : "c0";
 }
 
-const contributionInfo: ContributionInfo = SKIP_REMOTE
-    ? { totalContributions: 0, weeks: [] }
-    : await getGitHubContributionWeeks("anshcodes22");
+const githubStats = await getEntry("github", "stats");
+const contributionInfo = {
+    totalContributions: githubStats?.data.totalContributions ?? 0,
+    weeks: (githubStats?.data.weeks ?? []).map((week: any) => {
+        const days = Array(7).fill(null);
+        for (const day of week.contributionDays) {
+            days[day.weekday] = {
+                contributionCount: day.contributionCount,
+                date: new Date(day.date),
+            };
+        }
+        return days;
+    }),
+};
+
 const firstDay = contributionInfo.weeks[0]?.find((day) => day !== null);
-const lastDay = contributionInfo.weeks.at(-1)?.findLast((day) => day !== null);
+const lastDay = contributionInfo.weeks.at(-1)?.findLast((day: any) => day !== null);
 ---
 
 <github-calendar
