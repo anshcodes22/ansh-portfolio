@@ -212,6 +212,7 @@ export const collections = {
                         data: {
                             totalContributions: total,
                             weeks: finalWeeks,
+                            lastUpdated: new Date().toISOString(),
                         },
                     });
                     logger.info(`Successfully fetched ${total} GitHub contributions`);
@@ -226,6 +227,7 @@ export const collections = {
         },
         schema: z.object({
             totalContributions: z.number(),
+            lastUpdated: z.string().optional(),
             weeks: z.array(
                 z.object({
                     contributionDays: z.array(

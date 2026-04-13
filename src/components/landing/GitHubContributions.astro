@@ -38,6 +38,7 @@ const lastDay = contributionInfo.weeks.at(-1)?.findLast((day: any) => day !== nu
     class="block bg-transparent py-2"
     data-start-date={firstDay?.date.getTime()}
     style="display:block;"
+    title={`Last updated: ${githubStats?.data.lastUpdated ? new Date(githubStats.data.lastUpdated).toLocaleString() : 'Never'}`}
 >
     <div
         class="text-secondary flex h-8 flex-row items-end pl-8 font-mono text-lg"
